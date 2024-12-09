@@ -1,0 +1,107 @@
+a {
+    text-decoration: none;
+}
+
+body {
+    height:100%;
+}
+
+.noBg {
+    background-color: rgb(55,55,55);
+}
+
+#venueDisplay {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#venuePhotoCarousel {
+    margin: 15px;
+    width: 80vw;
+    height: 50vh;
+}
+
+.carousel-inner {
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+.carousel-item img {
+    height: 50vh;
+    width: 100%;
+    object-fit: fill;
+}
+
+img[src="star.svg"] {
+    margin-top: -4px;
+}
+
+
+@media(min-width:768px){
+    #venuePhotoCarousel {
+        width: 80vw;
+    }
+    #calendarContainer, #reviewContainer {
+        width: 40vw;
+    }
+    .chart-container {
+        width:40vw;
+    }
+}
+
+@media(max-width:767px){
+    #venuePhotoCarousel {
+        width: 90vw;
+    }
+    #calendarContainer, #reviewContainer {
+        width: 100vw;
+    }
+    .chart-container {
+        width:80vw;
+    }
+}
+
+
+
+.venueInfo {
+    text-align: left;
+    width: 90vw;
+    margin-left: 5vw;
+    margin-right: 5vw;
+    margin-top: 10px;
+}
+
+#venueExtraInfo {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+
+th, td {
+    border: 1px solid #ffffff; /* White border */
+    padding: 3px 8px;
+    text-align: left;
+}
+
+#calendarContainer {
+    height: auto;
+}
+
+#reviewContainer {
+    height: auto;
+}
+
+.chart-container {
+    position: relative;
+}
+
+
+.fc-day-today {
+    background: rgb(55,55,55) !important;
+} 

@@ -1,0 +1,239 @@
+:root {
+    --customPurple: rgba(197,18,255,1)
+}
+
+body {
+    background-color: rgb(55,55,55);
+    color: white;
+    font-weight: 300;
+    font-family: Arial;
+    text-align: left;
+}
+
+
+#cardDisplay {
+    display:flex;
+    margin-bottom: 100px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+
+
+.card {
+    width: 20rem;
+    margin: 1rem;
+}
+
+.liked {
+    position: absolute;
+    width: 40px;
+    left:83%;
+    top:89%;
+}
+
+
+.starRating {
+    align-items: center;
+    width: fit-content;
+    padding: 0px 5px;
+    margin-left: -5px;
+}
+
+.starRating img {
+    margin-top: -4px;
+}
+
+
+
+.overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    z-index: 100;
+
+    background-color: rgba(55,55,55,1);
+    padding: 10px;
+    border-radius: 10px;
+    border: 3px white solid;
+  }
+
+
+.custom-purple-btn {
+    border-color: var(--customPurple);
+    color: white;
+}
+
+.custom-purple-btn:hover {
+    border-color: var(--customPurple);
+    background-color: var(--customPurple); 
+    color: white;
+}
+
+.custom-purple-btn:not(:disabled):not(:disabled):active {
+    border-color: var(--customPurple);
+    background-color: var(--customPurple);
+    color: white;
+} 
+
+.custom-purple-btn:disabled {
+    border-color: var(--customPurple);
+    background-color: rgb(55,55,55);
+} 
+
+.custom-tooltip .tooltip-inner{
+    background-color: var(--customPurple);
+    color: #ffffff;
+}
+
+.custom-tooltip .tooltip-arrow {
+    display: none;
+}
+
+#map {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    width: 95%;
+    height: 85%;
+}
+
+.leaflet-popup-content-wrapper .markerLink {
+    text-decoration: none;
+    color: black;
+}
+
+
+#filters{
+    text-align: right;
+}
+
+#filterButtonContainer{
+    padding-top: 10px;
+    padding-right: 10px;
+}
+
+
+#sidebar{
+    color: #ffffff;
+    text-align: left;
+    padding: 10px;
+    padding-left: 15px;
+    margin: 0;
+    float: left;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+
+#sidebar div{
+    padding: 5px 0px;
+}
+
+#venues{
+    padding: 10px;
+    margin: 0;
+    float: right;
+}
+
+
+@media(min-width:768px){
+    #sidebar{
+        width: 15%;
+        display: block;
+    }
+    #venues{
+        width: 85%;
+    }
+    #filterButtonContainer{
+        display: none;
+    }
+}
+
+@media(max-width:767px){
+    #sidebar{
+        width: 100%;
+        display: none;
+    }
+    #venues{
+        width: 100%;
+    }
+    #filterButtonContainer{
+        display: block;
+    }
+}
+
+
+input[type="checkbox"] {
+    display: none;
+    cursor: pointer;
+}
+
+label img {
+    padding-bottom: 5px;
+}
+label {
+    margin-bottom: 10px;
+}
+
+input[type="checkbox"][name="priceTime"] + span,
+input[type="checkbox"][name="licensed"] + span {
+    padding: 5px 15px;
+    border: 1px solid var(--customPurple);
+    border-radius: 10px;
+}
+
+.selectedCheckbox input[type="checkbox"][name="priceTime"] + span,
+.selectedCheckbox input[type="checkbox"][name="licensed"] + span{
+    background-color: var(--customPurple);
+    color: white;
+}
+
+
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+    background-color: var(--customPurple);
+    border-radius: 5px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    background-color: white;
+    border: 1px solid white;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+select {
+    border: none;
+    background-color: #212529;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+
+input[type="date"] {
+    background-color: #212529;
+    color: white;
+}
+
+#availabilityRange {
+    display: flex;
+    flex-wrap: wrap;
+    align-items:flex-end;
+    flex-direction: row;
+}
+
+#availabilityRange label {
+    margin-right: 5px;
+    width: 35px;
+}
