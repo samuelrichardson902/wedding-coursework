@@ -1,85 +1,101 @@
 <?php
-    //start then check database connection
-    include "db-config.php";
-    $conn = new mysqli($servername, $username, $password, $database);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
+    //all code modified to query a json rather than a phpmyadmin database like it did in the coursework
+    
+    // Load the JSON file
+    $jsonData = file_get_contents('coa123wdb.json');
+    $data = json_decode($jsonData, true);
 
-    //sql to get db contents
-    $sql = "SELECT
-        venue.venue_id,
-        venue.name,
-        venue.capacity,
-        venue.licensed,
-        venue.latitude,
-        venue.longitude,
-        venue.weekday_price,
-        venue.weekend_price,
-        catering_types.grades AS catering_grade,
-        catering_types.costs AS catering_cost,
-        COALESCE(review_scores.review_score, 'No reviews yet') AS review_score,
-        review_scores.reviews_count AS num_reviews,
-        review_scores.ratings_counts AS ratings_counts
+    // Extract relevant tables
+    $venues = [];
+    $catering = [];
+    $reviews = [];
+    $bookings = [];
 
-        FROM venue
-            
-        LEFT JOIN (
-            SELECT venue_id,
-                GROUP_CONCAT(grade) as grades,
-                GROUP_CONCAT(cost) as costs
-            FROM catering
-            GROUP BY venue_id
-        ) catering_types ON venue.venue_id = catering_types.venue_id
-                
-        LEFT JOIN (
-            SELECT venue_id,
-                AVG(score) AS review_score,
-                COUNT(score) AS reviews_count,
-                CONCAT_WS(',',
-                SUM(score = 0),
-                SUM(score = 1),
-                SUM(score = 2),
-                SUM(score = 3),
-                SUM(score = 4),
-                SUM(score = 5),
-                SUM(score = 6),
-                SUM(score = 7),
-                SUM(score = 8),
-                SUM(score = 9),
-                SUM(score = 10)
-                ) AS ratings_counts
-            FROM venue_review_score
-            GROUP BY venue_id
-        ) review_scores on venue.venue_id = review_scores.venue_id";
-
-    //send sql request to db
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        //initialise array to store all data
-        $venues = array();
-
-        //go over db contents
-        while($row = $result->fetch_assoc()){
-            //get bookings from db
-            $bookingQuery = "SELECT booking_date
-            FROM venue_booking
-            WHERE venue_id = " . $row['venue_id'];
-            $bookingResults = $conn->query($bookingQuery);
-
-            //add all bookings for a venue to its row
-            $bookings = array();
-            while($booking = $bookingResults->fetch_assoc()){
-                $bookings[] = $booking['booking_date'];
+    foreach ($data as $table) {
+        if ($table['type'] === 'table') {
+            switch ($table['name']) {
+                case 'venue':
+                    $venues = $table['data'];
+                    break;
+                case 'catering':
+                    $catering = $table['data'];
+                    break;
+                case 'venue_review_score':
+                    $reviews = $table['data'];
+                    break;
+                case 'venue_booking':
+                    $bookings = $table['data'];
+                    break;
             }
-            $row['bookings'] = $bookings;
-
-            //add all data to venues array
-            $venues[] = $row;
         }
     }
-    //close db connection and send json data back
-    $conn->close();
-    echo json_encode($venues);
+
+    // Process data
+    $result = [];
+    foreach ($venues as $venue) {
+        $venue_id = $venue['venue_id'];
+
+        // Get catering data
+        $catering_grades = [];
+        $catering_costs = [];
+        foreach ($catering as $c) {
+            if ($c['venue_id'] == $venue_id) {
+                $catering_grades[] = $c['grade'];
+                $catering_costs[] = $c['cost'];
+            }
+        }
+        
+        // Get review data
+        $review_score = 'No reviews yet';
+        $num_reviews = 0;
+        $ratings_counts_array = array_fill(0, 11, 0); // Array to store count of scores from 0 to 10
+        $review_sum = 0;
+
+        foreach ($reviews as $r) {
+            if ($r['venue_id'] == $venue_id) {
+                $score = (int) $r['score'];
+                $review_sum += $score;
+                $num_reviews++;
+                $ratings_counts_array[$score]++; // Count occurrences of each score
+            }
+        }
+
+        // Calculate average review score
+        if ($num_reviews > 0) {
+            $review_score = round($review_sum / $num_reviews, 1); // Round to 1 decimal place
+        }
+
+        // Convert ratings count array to comma-separated string
+        $ratings_counts = implode(',', $ratings_counts_array);
+
+
+        // Get booking data
+        $venue_bookings = [];
+        foreach ($bookings as $b) {
+            if ($b['venue_id'] == $venue_id) {
+                $venue_bookings[] = $b['booking_date'];
+            }
+        }
+
+        // Assemble venue data
+        $result[] = [
+            'venue_id' => $venue_id,
+            'name' => $venue['name'],
+            'capacity' => $venue['capacity'],
+            'licensed' => $venue['licensed'],
+            'latitude' => $venue['latitude'],
+            'longitude' => $venue['longitude'],
+            'weekday_price' => $venue['weekday_price'],
+            'weekend_price' => $venue['weekend_price'],
+            'catering_grade' => implode(',', $catering_grades),
+            'catering_cost' => implode(',', $catering_costs),
+            'review_score' => $review_score,
+            'num_reviews' => $num_reviews,
+            'ratings_counts' => $ratings_counts,
+            'bookings' => $venue_bookings
+        ];
+    }
+
+    // Output JSON
+    echo json_encode($result, JSON_PRETTY_PRINT);
 ?>
