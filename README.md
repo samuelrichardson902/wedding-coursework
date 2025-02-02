@@ -10,4 +10,4 @@ This repository contains the code for my university coursework project, focused 
 
 ## Live Demo
 You can view the project live at:  
-[venue-vista.infy.uk](https://venue-vista.infy.uk)
+[venue-vista.infy.uk](http://venue-vista.infy.uk)
