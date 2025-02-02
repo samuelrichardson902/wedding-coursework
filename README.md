@@ -8,5 +8,6 @@ This repository contains the code for my university coursework project, focused 
 - CSS
 - HTML
 
-This site can be viewed at:
-  venue-vista.infy.uk
+## Live Demo
+You can view the project live at:  
+[venue-vista.infy.uk](https://venue-vista.infy.uk)
