@@ -33,6 +33,17 @@
         }
     }
 
+    //find offsett to modify the dates of bookings so that they are recent
+    // Get current date
+    $currentDate = new DateTime();
+
+    // Set reference date (28/02/2024)
+    $referenceDate = new DateTime('2024-01-01');
+
+    // Calculate the number of days that have passed since 28/02/2024
+    $interval = $referenceDate->diff($currentDate);
+    $daysPassed = $interval->days;
+
     // Find requested venue
     $venue = null;
     foreach ($venues as $v) {
@@ -87,7 +98,14 @@
     $venue_bookings = [];
     foreach ($bookings as $b) {
         if ($b['venue_id'] == $venue_id) {
-            $venue_bookings[] = $b['booking_date'];
+            $bookingDate = new DateTime($b['booking_date']);
+            
+            // If the booking date is in the past, add the number of days passed since 28/02/2024
+            if ($bookingDate < $currentDate) {
+                $bookingDate->modify("+$daysPassed days"); // Add the days that have passed
+            }
+            
+            $venue_bookings[] = $bookingDate->format('Y-m-d'); // Store the adjusted or current booking date
         }
     }
 
