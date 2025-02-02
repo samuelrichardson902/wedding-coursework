@@ -129,14 +129,34 @@
                 <div id="availabilityRange">
                     <div>
                         <label for="dateRangeStart">From:</label>
-                        <input type="date" name="availability" id="dateRangeStart" value="2024-01-01" min="2024-01-01" max="2024-12-31">
+                        <input type="date" name="availability" id="dateRangeStart">
                     </div>
                     <div>
                         <label for="dateRangeEnd">To:</label>
-                        <input type="date" name="availability" id="dateRangeEnd" value="2024-12-31" min="2024-01-01" max="2024-12-31">
+                        <input type="date" name="availability" id="dateRangeEnd">
                     </div>
                 </div>
             </div>
+
+            <script>
+                // Get the current date and format it as YYYY-MM-DD
+                const currentDate = new Date();
+                const currentDateString = currentDate.toISOString().split('T')[0];
+
+                // Get the date one year from now and format it as YYYY-MM-DD
+                const oneYearFromNow = new Date();
+                oneYearFromNow.setFullYear(currentDate.getFullYear() + 1);
+                const oneYearFromNowString = oneYearFromNow.toISOString().split('T')[0];
+
+                // Set the value, min, and max for the date inputs
+                document.getElementById('dateRangeStart').value = currentDateString;
+                document.getElementById('dateRangeStart').min = currentDateString;
+                document.getElementById('dateRangeStart').max = oneYearFromNowString;
+
+                document.getElementById('dateRangeEnd').value = oneYearFromNowString;
+                document.getElementById('dateRangeEnd').min = currentDateString;
+                document.getElementById('dateRangeEnd').max = oneYearFromNowString;
+            </script>
 
             <div>
                 <h6>Licensed:</h6>
